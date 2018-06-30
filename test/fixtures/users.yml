@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  surname: MyString
+  tok: MyString
+  token: MyString
+  time: MyString
+  mac: MyString
+
+two:
+  name: MyString
+  surname: MyString
+  tok: MyString
+  token: MyString
+  time: MyString
+  mac: MyString
