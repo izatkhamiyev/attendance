@@ -1,5 +1,5 @@
 class Token < ApplicationRecord
-	has_many :users, dependent: :destroy
+	has_many :users #, dependent: :destroy
 
 	before_create :gen_token
 
