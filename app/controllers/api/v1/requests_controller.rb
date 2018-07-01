@@ -2,24 +2,39 @@ class Api::V1::RequestsController < ApplicationController
  
   def create
   	token = Token.create()
-  	render json: token, only: [:token]
+  	render json: token#, only: [:token]
+  end
+
+  def calc_sec(time)
+    min = time.strftime("%M")
+    sec = time.strftime("%S")
+    total_sec = Integer(min)*60 + Integer(sec)
   end
 
   def add
-  	# user = User.new(params[:name, :surname, :token, :mac, :time], token_id: token.id)
   	nm = params[:name]
   	snm = params[:surname]
   	token = Token.find_by_token(params[:token])
-  	mac = params[:mac]
-  	time = params[:time]
-  	user = User.new(name: nm, surname: snm, token: token, mac: mac, time: time, token_id: token.id)
-  	# render json: user
-  	# token = Token.find_by_token(user[:token])
-  	if user.save && token
-  		render json: user
-  	else
-  		render json: { errors: user.errors.full_messages }, status: :errors
-  	end
+    if token 
+    	mac = params[:mac]
+    	time = params[:time]
+      a = time.split(':')
+      user_sec = Integer(a[0])*60 + Integer(a[1])
+      token_sec = calc_sec(token.created_at)
+    	user = User.new(name: nm, surname: snm, token: token, mac: mac, time: time, token_id: token.id)
+
+      if token_sec <= user_sec && user_sec <= token_sec + 10
+         if user.save
+      		  render json: user
+      	  else
+      		  render json: { errors: user.errors.full_messages }, status: :errors
+          end
+      else
+        render json: { errors: ["time is up"]}, status: :errors
+      end
+    else
+        render json: { errors: ["token doesn't exist"]}, status: :errors
+    end
   end
 
   def show
